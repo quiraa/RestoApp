@@ -1,61 +1,95 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/config/route/app_router.dart';
 import 'package:restaurant_app/config/route/screen_routes.dart';
+import 'package:restaurant_app/features/presentation/bloc/remote/home/home_bloc.dart';
+import 'package:restaurant_app/features/presentation/bloc/remote/home/home_state.dart';
 
-import 'package:restaurant_app/features/presentation/provider/restaurant_provider.dart';
 import 'package:restaurant_app/features/presentation/widget/content_state.dart';
 import 'package:restaurant_app/features/presentation/widget/restaurant_list_card.dart';
-
-part 'local_components/home_header.dart';
-part 'local_components/home_scaffold.dart';
-part 'local_components/home_appbar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return HomeScaffold(
-      appBar: homeAppBar(
-        onSearchClicked: () => AppRouter.push(context, ScreenRoutes.search),
+    return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              onPressed: () => AppRouter.push(context, ScreenRoutes.search),
+              icon: const Icon(Icons.search_rounded),
+            ),
+          )
+        ],
       ),
-      header: const HomeHeader(),
-      restaurantList: Expanded(
-        child: Consumer<RestaurantProvider>(
-          builder: (context, provider, _) {
-            switch (provider.state) {
-              case ResultState.loading:
-                return const LoadingState();
+      body: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          switch (state.runtimeType) {
+            case HomeLoadingState:
+              return const LoadingState();
 
-              case ResultState.error:
-                return ErrorState(
-                  error: provider.message,
-                  onRefresh: () {
-                    provider.fetchAllRestaurants();
-                  },
-                );
+            case HomeErrorState:
+              return ErrorState(
+                error: state.error?.message ?? '',
+              );
 
-              case ResultState.noData:
-                return EmptyState(
-                  message: provider.message,
-                );
+            case HomeSuccessState:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Popular Restaurants',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          'We recommend these restaurants for you to try',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, _) =>
+                          const SizedBox(height: 16),
+                      padding: const EdgeInsets.all(16),
+                      shrinkWrap: true,
+                      itemCount: state.restaurants!.length,
+                      itemBuilder: (context, index) {
+                        return RestaurantListCard(
+                          restaurant: state.restaurants![index],
+                          onRestaurantClicked: (id) {
+                            AppRouter.push(context, ScreenRoutes.detail,
+                                arguments: id);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
 
-              case ResultState.hasData:
-                return RestaurantList(
-                  restaurants: provider.restaurantResponse.restaurants,
-                  onRestaurantClicked: (id) {
-                    AppRouter.push(context, ScreenRoutes.detail, arguments: id);
-                  },
-                );
-
-              default:
-                return const SizedBox();
-            }
-          },
-        ),
+            default:
+              return const SizedBox();
+          }
+        },
       ),
     );
   }

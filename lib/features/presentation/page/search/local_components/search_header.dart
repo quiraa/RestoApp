@@ -16,7 +16,7 @@ class SearchHeader extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           Text(
-            'Search Restaurant Name',
+            'Find any restaurants near you',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
         ],

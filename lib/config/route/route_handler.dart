@@ -24,7 +24,7 @@ class RouteHandler {
       case ScreenRoutes.search:
         return _getPageRoute(
           routeName: ScreenRoutes.search,
-          screen: const SearchPage(),
+          screen: SearchPage(),
         );
 
       case ScreenRoutes.detail:

@@ -8,44 +8,19 @@ class DetailImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: "https://restaurant-api.dicoding.dev/images/large/$imageId",
-      progressIndicatorBuilder: (context, url, progress) {
-        return _buildImagePlaceholder(
-            context, const CupertinoActivityIndicator());
-      },
+      height: 240,
+      width: double.maxFinite,
+      fit: BoxFit.cover,
       errorWidget: (context, url, error) {
-        return _buildImagePlaceholder(
-          context,
-          const Icon(Icons.image_not_supported_rounded),
+        return const Center(
+          child: Icon(Icons.image_not_supported_rounded),
         );
       },
-      imageBuilder: (context, imageProvider) {
-        return AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Container(
-            height: 128,
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-            ),
-          ),
+      progressIndicatorBuilder: (context, url, progress) {
+        return const Center(
+          child: CupertinoActivityIndicator(),
         );
       },
-    );
-  }
-
-  Widget _buildImagePlaceholder(BuildContext context, Widget child) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Container(
-        height: 128,
-        width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-        ),
-        child: child,
-      ),
     );
   }
 }

@@ -20,11 +20,10 @@ class SearchScaffold extends StatelessWidget {
       appBar: appBar,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
           headerView,
           searchFieldView,
-          searchListView,
+          Expanded(child: searchListView),
         ],
       ),
     );

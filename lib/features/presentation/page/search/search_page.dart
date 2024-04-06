@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/config/route/app_router.dart';
 import 'package:restaurant_app/config/route/screen_routes.dart';
-import 'package:restaurant_app/features/presentation/provider/restaurant_provider.dart';
+import 'package:restaurant_app/features/presentation/bloc/remote/search/search_bloc.dart';
+import 'package:restaurant_app/features/presentation/bloc/remote/search/search_event.dart';
+import 'package:restaurant_app/features/presentation/bloc/remote/search/search_state.dart';
 import 'package:restaurant_app/features/presentation/widget/content_state.dart';
 import 'package:restaurant_app/features/presentation/widget/restaurant_list_card.dart';
 
@@ -29,42 +32,62 @@ class _SearchPageState extends State<SearchPage> {
       searchFieldView: SearchField(
         controller: searchController,
         onSearch: (value) {
-          Provider.of<RestaurantProvider>(context, listen: false)
-              .searchRestaurants(searchController.text);
+          BlocProvider.of<SearchBloc>(context).add(
+            SearchRestaurantEvent(value),
+          );
         },
       ),
-      searchListView: Expanded(
-        child: Consumer<RestaurantProvider>(
-          builder: (context, provider, _) {
-            switch (provider.state) {
-              case ResultState.loading:
-                return const LoadingState();
+      searchListView: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, state) {
+          switch (state.runtimeType) {
+            case SearchInitialState:
+              return const Center(
+                child: Text('Search Restaurants'),
+              );
 
-              case ResultState.error:
-                return ErrorState(
-                  error: provider.message,
-                );
+            case SearchLoadingState:
+              return const LoadingState();
 
-              case ResultState.noData:
-                return const EmptyState(
-                  message: 'No restaurants found',
-                );
+            case SearchErrorState:
+              return ErrorState(
+                error: state.error?.message ?? '',
+              );
 
-              case ResultState.hasData:
-                return RestaurantList(
-                  restaurants: provider.searchList,
-                  onRestaurantClicked: (id) {
-                    AppRouter.push(context, ScreenRoutes.detail, arguments: id);
-                  },
-                );
+            case SearchEmptyState:
+              return const EmptyState(
+                message: 'No Restaurants Found',
+              );
 
-              default:
-                return const Center(
-                  child: Text('Default'),
-                );
-            }
-          },
-        ),
+            case SearchSuccessState:
+              return Column(
+                children: [
+                  const Text('Popular Restaurants'),
+                  const Text('We recommend these restaurants for you to try'),
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 16),
+                      separatorBuilder: (context, _) =>
+                          const SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        return RestaurantListCard(
+                          restaurant: state.restaurants![index],
+                          onRestaurantClicked: (id) {
+                            AppRouter.push(context, ScreenRoutes.detail,
+                                arguments: id);
+                          },
+                        );
+                      },
+                      itemCount: state.restaurants!.length,
+                    ),
+                  ),
+                ],
+              );
+
+            default:
+              return const SizedBox();
+          }
+        },
       ),
     );
   }
