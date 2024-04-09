@@ -4,12 +4,14 @@ class DetailHeader extends StatelessWidget {
   final String name;
   final String location;
   final String rating;
+  final Widget favoriteButton;
 
   const DetailHeader({
     Key? key,
     required this.name,
     required this.location,
     required this.rating,
+    required this.favoriteButton,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,10 @@ class DetailHeader extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Icon(Icons.location_on_outlined),
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         location,
@@ -54,7 +59,10 @@ class DetailHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.star_rate_outlined),
+                      const Icon(
+                        Icons.star_rate,
+                        color: Colors.orangeAccent,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         rating,
@@ -67,6 +75,10 @@ class DetailHeader extends StatelessWidget {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.topRight,
+                child: favoriteButton,
+              )
             ],
           )
         ],

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/features/data/model/list/restaurant_item_response.dart';
+import 'package:restaurant_app/features/data/model/response/list/restaurant_item_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class RestaurantListCard extends StatelessWidget {
@@ -27,7 +27,7 @@ class RestaurantListCard extends StatelessWidget {
           children: [
             _buildImage(context),
             const SizedBox(width: 16),
-            _buildTitleAndDescription(),
+            Expanded(child: _buildTitleAndDescription()),
           ],
         ),
       ),
@@ -55,7 +55,9 @@ class RestaurantListCard extends StatelessWidget {
         );
       },
       errorWidget: (context, url, error) {
-        return const Center(child: Icon(Icons.image_not_supported_rounded));
+        return const Center(
+          child: Icon(Icons.image_not_supported_rounded),
+        );
       },
     );
   }

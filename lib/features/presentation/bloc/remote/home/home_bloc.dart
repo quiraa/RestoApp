@@ -18,7 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final restaurants = await getAllRestaurantUseCase();
 
     if (restaurants is DataSuccess) {
-      emit(HomeSuccessState(restaurants.data!.restaurants!));
+      emit(HomeSuccessState(restaurants.data!));
     }
 
     if (restaurants is DataError) {

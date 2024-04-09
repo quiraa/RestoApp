@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/config/route/screen_routes.dart';
 import 'package:restaurant_app/features/presentation/page/detail/detail_page.dart';
-import 'package:restaurant_app/features/presentation/page/home/home_page.dart';
-import 'package:restaurant_app/features/presentation/page/search/search_page.dart';
+import 'package:restaurant_app/features/presentation/page/main_page.dart';
 
 class RouteHandler {
   PageRoute _getPageRoute({String? routeName, Widget? screen}) {
@@ -18,13 +17,7 @@ class RouteHandler {
       case ScreenRoutes.home:
         return _getPageRoute(
           routeName: ScreenRoutes.home,
-          screen: const HomePage(),
-        );
-
-      case ScreenRoutes.search:
-        return _getPageRoute(
-          routeName: ScreenRoutes.search,
-          screen: SearchPage(),
+          screen: const MainPage(),
         );
 
       case ScreenRoutes.detail:

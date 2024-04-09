@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:restaurant_app/features/data/model/add_review/customer_review_response.dart';
+import 'package:restaurant_app/features/data/model/response/add_review/customer_review_response.dart';
 
 part 'restaurant_response.g.dart';
 

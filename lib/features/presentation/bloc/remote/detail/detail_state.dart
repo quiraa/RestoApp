@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:restaurant_app/features/data/model/detail/detail_restaurant_response.dart';
+import 'package:equatable/equatable.dart';
+import 'package:restaurant_app/features/data/model/response/detail/detail_restaurant_response.dart';
 
-abstract class DetailState {
+abstract class DetailState extends Equatable {
   final DetailRestaurantResponse? detailRestaurant;
   final DioException? error;
 
   const DetailState({this.detailRestaurant, this.error});
+
+  @override
+  List<Object?> get props => [detailRestaurant!, error!];
 }
 
 class DetailLoadingState extends DetailState {

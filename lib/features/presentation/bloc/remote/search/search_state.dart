@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:restaurant_app/features/data/model/list/restaurant_item_response.dart';
+import 'package:restaurant_app/features/data/model/response/list/restaurant_item_response.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class SearchState {
+abstract class SearchState extends Equatable {
   final List<RestaurantItemResponse>? restaurants;
   final DioException? error;
 
   const SearchState({this.restaurants, this.error});
+
+  @override
+  List<Object?> get props => [restaurants!, error!];
 }
 
 class SearchInitialState extends SearchState {

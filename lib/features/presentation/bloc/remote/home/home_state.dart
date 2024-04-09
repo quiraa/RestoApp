@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:restaurant_app/features/data/model/list/restaurant_item_response.dart';
+import 'package:equatable/equatable.dart';
+import 'package:restaurant_app/features/data/model/response/list/list_restaurant_response.dart';
 
-abstract class HomeState {
-  final List<RestaurantItemResponse>? restaurants;
+abstract class HomeState extends Equatable {
+  final ListRestaurantResponse? restaurants;
   final DioException? error;
 
   const HomeState({this.error, this.restaurants});
+
+  @override
+  List<Object?> get props => [restaurants!, error!];
 }
 
 class HomeLoadingState extends HomeState {
@@ -17,6 +21,6 @@ class HomeErrorState extends HomeState {
 }
 
 class HomeSuccessState extends HomeState {
-  const HomeSuccessState(List<RestaurantItemResponse> restaurants)
+  const HomeSuccessState(ListRestaurantResponse restaurants)
       : super(restaurants: restaurants);
 }

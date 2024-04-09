@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:restaurant_app/features/data/model/add_review/review_body.dart';
-import 'package:restaurant_app/features/data/model/search/search_restaurant_response.dart';
+import 'package:restaurant_app/features/data/model/response/add_review/review_body.dart';
+import 'package:restaurant_app/features/data/model/response/search/search_restaurant_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 import 'package:restaurant_app/core/constants/constants.dart' as Constants;
-import 'package:restaurant_app/features/data/model/add_review/add_review_response.dart';
-import 'package:restaurant_app/features/data/model/detail/detail_restaurant_response.dart';
-import 'package:restaurant_app/features/data/model/list/list_restaurant_response.dart';
+import 'package:restaurant_app/features/data/model/response/add_review/add_review_response.dart';
+import 'package:restaurant_app/features/data/model/response/detail/detail_restaurant_response.dart';
+import 'package:restaurant_app/features/data/model/response/list/list_restaurant_response.dart';
 
 part 'api_service.g.dart';
 
