@@ -53,12 +53,10 @@ class _DetailPageState extends State<DetailPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<DetailBloc>(
-          create: (_) =>
-              sl()..add(GetDetailRestaurantEvent(widget.restaurantId ?? '')),
+          create: (_) => sl()..add(GetDetailRestaurantEvent(widget.restaurantId ?? '')),
         ),
         BlocProvider<FavoriteBloc>(
-          create: (_) =>
-              sl()..add(CheckFavoriteEvent(widget.restaurantId ?? '')),
+          create: (_) => sl()..add(CheckFavoriteEvent(widget.restaurantId ?? '')),
         )
       ],
       child: Scaffold(
@@ -132,10 +130,8 @@ class _DetailPageState extends State<DetailPage> {
                         final review = _reviewController.text;
 
                         if (name.isNotEmpty && review.isNotEmpty) {
-                          final body =
-                              ReviewBody(id: id, name: name, review: review);
-                          BlocProvider.of<DetailBloc>(context)
-                              .add(AddCustomerReviewEvent(body));
+                          final body = ReviewBody(id: id, name: name, review: review);
+                          BlocProvider.of<DetailBloc>(context).add(AddCustomerReviewEvent(body));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Review Posted'),
@@ -167,13 +163,13 @@ class _DetailPageState extends State<DetailPage> {
     RestaurantResponse restaurant,
     FavoriteState state,
   ) {
+    final favoriteBloc = BlocProvider.of<FavoriteBloc>(context);
     if (state is IsFavoriteState) {
       return FavoriteButton(
         isFavorite: true,
         onFavoriteClick: () {
-          BlocProvider.of<FavoriteBloc>(context).add(
-            DeleteSingleFavoriteEvent(restaurant.id ?? ''),
-          );
+          favoriteBloc.add(DeleteSingleFavoriteEvent(restaurant.id ?? ''));
+          favoriteBloc.add(CheckFavoriteEvent(restaurant.id ?? ''));
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Removed from Favorite'),
@@ -185,7 +181,7 @@ class _DetailPageState extends State<DetailPage> {
       return FavoriteButton(
         isFavorite: false,
         onFavoriteClick: () {
-          BlocProvider.of<FavoriteBloc>(context).add(
+          favoriteBloc.add(
             InsertFavoriteEvent(
               FavoriteRestaurant(
                 id: restaurant.id,
@@ -196,6 +192,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
           );
+          favoriteBloc.add(CheckFavoriteEvent(restaurant.id ?? ''));
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Added to Favorite'),

@@ -26,8 +26,12 @@ class RestaurantListCard extends StatelessWidget {
         child: Row(
           children: [
             _buildImage(context),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTitleAndDescription()),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildTitleAndDescription(),
+              ),
+            ),
           ],
         ),
       ),
@@ -73,6 +77,7 @@ class RestaurantListCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           overflow: TextOverflow.clip,
+          maxLines: null,
         ),
         Row(
           children: [
@@ -87,6 +92,8 @@ class RestaurantListCard extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
+              maxLines: null,
+              overflow: TextOverflow.clip,
             ),
           ],
         ),
@@ -97,7 +104,11 @@ class RestaurantListCard extends StatelessWidget {
               color: Colors.orangeAccent,
             ),
             const SizedBox(width: 8),
-            Text(restaurant?.rating.toString() ?? '')
+            Text(
+              restaurant?.rating.toString() ?? '',
+              maxLines: null,
+              overflow: TextOverflow.clip,
+            )
           ],
         )
       ],

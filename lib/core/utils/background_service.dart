@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -31,8 +32,12 @@ class BackgroundService {
     print('Alarm fired!');
     final notifService = NotificationService();
     var result = await ApiService(Dio()).getAllRestaurants();
+    int randomIndex = Random().nextInt(20);
 
-    await notifService.showNotification(localNotificationPlugin, result.data);
+    await notifService.showNotification(
+      localNotificationPlugin,
+      result.data.restaurants![randomIndex],
+    );
 
     _uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);
     _uiSendPort?.send(null);

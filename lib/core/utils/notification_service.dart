@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:restaurant_app/config/route/app_router.dart';
 import 'package:restaurant_app/config/route/screen_routes.dart';
 import 'package:restaurant_app/features/data/model/response/list/list_restaurant_response.dart';
+import 'package:restaurant_app/features/data/model/response/list/restaurant_item_response.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:rxdart/subjects.dart';
@@ -20,19 +21,16 @@ class NotificationService {
   }
 
   factory NotificationService() => _instance ?? NotificationService._internal();
-  int randomIndex = Random().nextInt(20);
 
   static void requestAndroidPermissions(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
   ) {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestExactAlarmsPermission();
 
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
   }
 
@@ -40,8 +38,7 @@ class NotificationService {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
   ) {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -80,10 +77,9 @@ class NotificationService {
 
   Future<void> showNotification(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    ListRestaurantResponse restaurants,
+    RestaurantItemResponse restaurant,
   ) async {
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        "1", "notif_channel",
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails("1", "notif_channel",
         channelDescription: "restaurant app channel",
         importance: Importance.max,
         priority: Priority.high,
@@ -98,25 +94,22 @@ class NotificationService {
     );
 
     var notifTitle = "<b>Recommended Restaurants for You<b>";
-    var restaurantName = restaurants.restaurants?[randomIndex].name;
+    var restaurantName = restaurant.name;
 
     await flutterLocalNotificationsPlugin.show(
       0,
       notifTitle,
       restaurantName,
       platformChannelSpecifics,
-      payload: json.encode(restaurants.toJson()),
+      payload: json.encode(restaurant.toJson()),
     );
   }
 
   void configureSelectNotificationSubject(BuildContext context, String route) {
     selectNotificationSubject.stream.listen((String? payload) async {
-      var data = ListRestaurantResponse.fromJson(
-          json.decode(payload ?? 'empty payload'));
+      var data = RestaurantItemResponse.fromJson(json.decode(payload ?? 'empty payload'));
       print(data);
-      var restaurant = data.restaurants?[randomIndex];
-      AppRouter.push(context, ScreenRoutes.detail,
-          arguments: restaurant?.id ?? '');
+      AppRouter.push(context, ScreenRoutes.detail, arguments: data.id ?? '');
     });
   }
 }

@@ -29,8 +29,12 @@ class FavoriteCard extends StatelessWidget {
         child: Row(
           children: [
             _buildImage(context),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTitleAndDescription()),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildTitleAndDescription(),
+              ),
+            ),
             _buildRemoveButton(),
           ],
         ),
